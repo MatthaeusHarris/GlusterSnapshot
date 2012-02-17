@@ -20,8 +20,8 @@ require "net/ssh"
 require "pp"
 require "highline/import"
 
-cloudservers = ["153.90.178.253", "virt7.rcg.montana.edu"]
-masterserver = "virt7.rcg.montana.edu"
+cloudservers = ["cloud0.rcg.montana.edu", "cloud1.rcg.montana.edu"]
+masterserver = "cloud0.rcg.montana.edu"
 backupto = "/mnt/backup"
 backupfrom = "/mnt/snapshot"
 

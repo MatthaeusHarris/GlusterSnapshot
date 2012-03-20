@@ -20,11 +20,14 @@ require "net/ssh"
 require "pp"
 require "highline/import"
 
-cloudservers = ["cloud0.rcg.montana.edu", "cloud1.rcg.montana.edu"]
-masterserver = "cloud0.rcg.montana.edu"
-backupto = "/mnt/backup"
-backupfrom = "/mnt/snapshot"
 
+# cloudservers = ["cloud0.rcg.montana.edu", "cloud1.rcg.montana.edu"]
+# masterserver = "cloud0.rcg.montana.edu"
+# backupto = "/mnt/backup"
+# backupfrom = "/mnt/snapshot"
+
+load 'snapshot.cfg.rb'
+settings = Settings.new()
 
 class RemoteHost
   def initialize(url, user = "matt")
@@ -134,13 +137,13 @@ class BackupManager
   end
 end
 
-BackupManager.new(cloudservers, masterserver).runbackup do 
+BackupManager.new(settings.cloudservers, settings.masterserver).runbackup do 
 #  abort "Test away, sir."
   STDERR.puts "Waiting to make sure the NFS mount is available..."
   sleep 5
   STDERR.puts "Starting the actual backup!" 
-  system("mount -t nfs #{masterserver}:/backup #{backupfrom}")
-  system("rsync -a --delete --progress #{backupfrom}/* #{backupto}") or abort("Something went wrong with the backup.  Dying immediately so you can test.")
-  system("umount #{backupfrom}")
+  system("mount -t nfs #{settings.masterserver}:/backup #{settings.backupfrom}")
+  system("rsync -a --delete --progress #{settings.backupfrom}/* #{settings.backupto}") or abort("Something went wrong with the backup.  Dying immediately so you can test.")
+  system("umount #{settings.backupfrom}")
   STDERR.puts "Backup complete!"
 end
